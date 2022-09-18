@@ -48,7 +48,7 @@ fn main() -> Html {
     html! {
             <ContextProvider<Images> context={(*ctx).clone()}>
         <BrowserRouter>
-            <div class="max-w-2xl h-100">
+            <div>
                 <Switch<Route> render={Switch::render(switch)} />
             </div>
         </BrowserRouter>

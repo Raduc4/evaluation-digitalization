@@ -4,7 +4,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 use crate::components::{
-    acordeon::AcordeonCard, add_btn::Add, input_image::FileInput, input_name::Input,
+    acordeon2::AcordeonCard, add_btn::Add, input_image::FileInput, input_name::Input,
 };
 
 #[function_component(Home)]
@@ -28,15 +28,15 @@ pub fn home() -> Html {
     // };
 
     html! {
-       <div class="bg-gray-800 h-screen w-screen pt-10">
-            <div class="mx-auto flex justify-between items-center max-w-5xl">
+       <div class="h-screen py-10">
+            <div class="mx-auto flex justify-between items-center max-w-5xl mb-10">
                         <div class="flex flex-col justify-between items-center">
                             <Input />
                              <Add />
                         </div>
                                 <FileInput />
             </div>
-                        <div class="block mx-auto max-w-5xl">
+                        <div class="block mx-auto max-w-5xl mt-16">
 
                         <AcordeonCard />
                                 </div>
