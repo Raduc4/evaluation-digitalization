@@ -5,10 +5,22 @@ use yew_router::prelude::*;
 
 #[function_component(AcordeonCard)]
 pub fn acordeon_card() -> Html {
+  let collapsed = use_state(|| false);
+  
+   let onclick = {
+        let curr_collapsed = collapsed.clone();
+       
+        Callback::from(move |_e: MouseEvent| {
+            match *curr_collapsed {
+            true => curr_collapsed.set(false),
+            false => curr_collapsed.set(true),
+          }
+        })
+    };
     html! {
       <div id="accordion-collapse" dataAccordion="collapse">
         <h2 id="accordion-collapse-heading-3">
-          <button type="button" class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" dataAccordionTarget="#accordion-collapse-body-3" ariaExpanded="false" ariaControls="accordion-collapse-body-3">
+          <button type="button" {onclick} class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" dataAccordionTarget="#accordion-collapse-body-3" ariaExpanded="false" ariaControls="accordion-collapse-body-3">
             <span>{"1. Cazacu Radu - 4 imagini"}</span>
 
             <div class="flex">
@@ -39,7 +51,7 @@ pub fn acordeon_card() -> Html {
             </div>
           </button>
         </h2>
-        <div id="accordion-collapse-body-3" class="" ariaLabelledby="accordion-collapse-heading-3">
+        <div id="accordion-collapse-body-3" class={if (*collapsed == false) {"hidden"} else {"block"}} ariaLabelledby="accordion-collapse-heading-3">
           <div class="p-5 font-light border justify-self-center mx-auto grid grid-cols-4 gap-y-8 border-t-0 border-gray-200 dark:border-gray-700">
               <img src={format!("./assets/photo.jpg")} width="200" height="300"/>
               <img src={format!("./assets/photo.jpg")} width="200" height="300"/>

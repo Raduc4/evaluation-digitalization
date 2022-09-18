@@ -41,7 +41,7 @@ pub fn file_input() -> Html {
               <span class="font-semibold">{"Click pentru a încărca imagini"}</span> {" sau trage imaginile în această zonă"}
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400">
-              {"PNG, JPG (MAX. 800x400px)"}
+              {"PNG, JPG, JPEG"}
             </p>
           </div>
 

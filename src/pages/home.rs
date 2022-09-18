@@ -39,6 +39,7 @@ pub fn home() -> Html {
 
         <div class="block mx-auto max-w-5xl mt-16">
           <AcordeonCard />
+          <AcordeonCard />
         </div>
       </div>
     }
