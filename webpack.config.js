@@ -29,7 +29,7 @@ module.exports = {
       forceMode: mode,
       forceWatch: true,
       watchOptions: {
-        aggregateTimeout: 500,
+        aggregateTimeout: 200,
         poll: 200,
         //  is not necessary as long as you remove pkg/* before building your wasm files
       },

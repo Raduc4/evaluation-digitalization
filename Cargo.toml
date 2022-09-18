@@ -2,6 +2,7 @@
 name = "yewchat"
 version = "0.1.0"
 edition = "2021"
+description= "Rust yew front-end"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -31,3 +32,4 @@ futures = "0.3.17"
 wasm-bindgen-futures = "0.4.28"
 serde_json = "1.0.73"
 serde = {version = "1.0", features=["derive"]}
+gloo-net = "0.2.4"

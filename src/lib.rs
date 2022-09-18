@@ -1,7 +1,9 @@
 #![recursion_limit = "512"]
 
-// mod components;
-// mod services;
+mod components;
+mod pages;
+
+use pages::home::Home;
 
 use wasm_bindgen::prelude::*;
 use yew::functional::*;
@@ -29,7 +31,7 @@ pub enum Route {
 fn switch(selected_route: &Route) -> Html {
     match selected_route {
         Route::Main => {
-            html! {<button class="text-black bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{"Default"}</button>}
+            html! {<Home />}
         }
         Route::NotFound => html! {<h1>{"404 baby"}</h1>},
     }
@@ -46,7 +48,7 @@ fn main() -> Html {
     html! {
             <ContextProvider<Images> context={(*ctx).clone()}>
         <BrowserRouter>
-            <div class="w-screen h-screen">
+            <div class="max-w-2xl h-100">
                 <Switch<Route> render={Switch::render(switch)} />
             </div>
         </BrowserRouter>
