@@ -20,5 +20,5 @@ pub fn acordeon_card() -> Html {
            </div>
          </div>
        </div>
-               }
+  }
 }
