@@ -46,13 +46,13 @@ fn main() -> Html {
     });
 
     html! {
-            <ContextProvider<Images> context={(*ctx).clone()}>
+      <ContextProvider<Images> context={(*ctx).clone()}>
         <BrowserRouter>
-            <div>
-                <Switch<Route> render={Switch::render(switch)} />
-            </div>
+          <div>
+              <Switch<Route> render={Switch::render(switch)} />
+          </div>
         </BrowserRouter>
-                </ContextProvider<Images>>
+      </ContextProvider<Images>>
     }
 }
 
