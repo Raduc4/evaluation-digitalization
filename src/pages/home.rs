@@ -30,16 +30,16 @@ pub fn home() -> Html {
     html! {
       <div class="h-screen py-10">
         <div class="mx-auto flex justify-between items-center max-w-5xl mb-10">
-        	<div class="flex flex-col justify-between items-center">
-        	  <Input />
+          <div class="flex flex-col justify-between items-center">
+            <Input />
             <Add />
           </div>
-						<FileInput />
-				</div>
+            <FileInput />
+        </div>
 
-				<div class="block mx-auto max-w-5xl mt-16">
-      		<AcordeonCard />
-      	</div>
+        <div class="block mx-auto max-w-5xl mt-16">
+          <AcordeonCard />
+        </div>
       </div>
     }
 }

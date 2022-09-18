@@ -9,7 +9,7 @@ pub fn acordeon_card() -> Html {
     <div class="">
          <h2>
            <div class="flex w-100 items-center py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400" >
-                                  <span class="">{"1. "}</span>
+             <span class="">{"1. "}</span>
              <span>{"Numele elevului"}</span>
            </div>
          </h2>
