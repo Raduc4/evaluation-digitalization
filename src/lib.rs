@@ -13,12 +13,28 @@ use yew_router::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+pub type State = Rc<States>;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Pupil {
+    id: u32,
+    name: RefCell<String>,
+    images: Vec<Images>,
+}
+
 pub type Images = Rc<ImagesInner>;
 
-#[derive(PartialEq, Debug)]
-pub struct ImagesInner {
-    pub images: RefCell<String>,
+#[derive(Debug, PartialEq, Clone)]
+struct States {
+    pupils: Vec<Pupil>,
+    temporar_images: ImagesInner,
 }
+
+#[derive(PartialEq, Debug, Clone, Eq)]
+pub struct ImagesInner {
+    pub images: RefCell<Vec<u8>>,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Routable)]
 pub enum Route {
     #[at("/")]
@@ -40,19 +56,20 @@ fn switch(selected_route: &Route) -> Html {
 #[function_component(Main)]
 fn main() -> Html {
     let ctx = use_state(|| {
-        Rc::new(ImagesInner {
-            images: RefCell::new("initial".into()),
+        Rc::new(States {
+            pupils: Vec::default(),
+            temporar_images: ImagesInner {
+                images: RefCell::new(Vec::new()),
+            },
         })
     });
 
     html! {
-      <ContextProvider<Images> context={(*ctx).clone()}>
+      <ContextProvider<State> context={(*ctx).clone()}>
         <BrowserRouter>
-          <div>
               <Switch<Route> render={Switch::render(switch)} />
-          </div>
         </BrowserRouter>
-      </ContextProvider<Images>>
+      </ContextProvider<State>>
     }
 }
 

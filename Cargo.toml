@@ -27,9 +27,12 @@ yew = "0.19.3"
 yew-agent = "0.1.0"
 yew-router = "0.16"
 reqwasm = "0.5"
-web-sys = "0.3.55"
+web-sys = {version = "0.3.55", features=["File", "DragEvent", "DataTransfer"]}
 futures = "0.3.17"
 wasm-bindgen-futures = "0.4.28"
 serde_json = "1.0.73"
 serde = {version = "1.0", features=["derive"]}
 gloo-net = "0.2.4"
+base64 = "0.13.0"
+gloo = "0.8"
+js-sys = "0.3"
