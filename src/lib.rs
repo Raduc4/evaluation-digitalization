@@ -3,6 +3,7 @@
 mod components;
 mod pages;
 
+use components::input_image_component::FileDetails;
 use pages::home::Home;
 
 use wasm_bindgen::prelude::*;
@@ -13,7 +14,7 @@ use yew_router::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub type State = Rc<States>;
+// pub type State = Rc<States>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Pupil {
@@ -32,7 +33,7 @@ struct States {
 
 #[derive(PartialEq, Debug, Clone, Eq)]
 pub struct ImagesInner {
-    pub images: RefCell<Vec<u8>>,
+    pub images: RefCell<Vec<FileDetails>>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Routable)]
@@ -56,20 +57,17 @@ fn switch(selected_route: &Route) -> Html {
 #[function_component(Main)]
 fn main() -> Html {
     let ctx = use_state(|| {
-        Rc::new(States {
-            pupils: Vec::default(),
-            temporar_images: ImagesInner {
-                images: RefCell::new(Vec::new()),
-            },
+        Rc::new(ImagesInner {
+            images: RefCell::new(Vec::new()),
         })
     });
 
     html! {
-      <ContextProvider<State> context={(*ctx).clone()}>
+      <ContextProvider<Images> context={(*ctx).clone()}>
         <BrowserRouter>
               <Switch<Route> render={Switch::render(switch)} />
         </BrowserRouter>
-      </ContextProvider<State>>
+      </ContextProvider<Images>>
     }
 }
 
@@ -83,6 +81,6 @@ pub fn run_app() -> Result<(), JsValue> {
 // allocator.
 //
 // If you don't want to use `wee_alloc`, you can safely delete this.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+// #[cfg(feature = "wee_alloc")]
+// #[global_allocator]
+// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;

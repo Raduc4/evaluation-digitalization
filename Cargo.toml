@@ -1,5 +1,5 @@
 [package]
-name = "yewchat"
+name = "digitalizare_evaluari"
 version = "0.1.0"
 edition = "2021"
 description= "Rust yew front-end"

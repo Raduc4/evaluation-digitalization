@@ -64,6 +64,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "digitalizare_evaluari"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "futures",
+ "gloo 0.8.0",
+ "gloo-net 0.2.4",
+ "js-sys",
+ "log",
+ "reqwasm",
+ "serde",
+ "serde_json",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wasm-logger",
+ "web-sys",
+ "wee_alloc",
+ "yew",
+ "yew-agent",
+ "yew-router",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -859,27 +882,4 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "yewchat"
-version = "0.1.0"
-dependencies = [
- "base64",
- "futures",
- "gloo 0.8.0",
- "gloo-net 0.2.4",
- "js-sys",
- "log",
- "reqwasm",
- "serde",
- "serde_json",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "wasm-logger",
- "web-sys",
- "wee_alloc",
- "yew",
- "yew-agent",
- "yew-router",
 ]
