@@ -49,45 +49,61 @@ impl Component for Home {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let on_clicked = ctx.link().callback(Msg::Add);
         html! {
-          <div class="h-screen py-10 pb-20 relative">
-            <div class="mx-auto flex justify-between items-start max-w-5xl mb-10">
-              <div class="flex flex-col justify-between items-start">
-                <Input />
-                <Add />
-              </div>
-                <FileInput {on_clicked}/>
-            </div>
+               <div class="h-screen py-10 pb-20 relative">
+                 <div class="mx-auto flex justify-between items-start max-w-5xl mb-10">
+                   <div class="flex flex-col justify-between items-start">
+                     <Input />
+                     <Add />
+                   </div>
+                     <FileInput />
+                 </div>
 
-            // <button {onclick}>{"Click"}</button>
-              // <div id="preview-area" class="flex flex-wrap relative right-72">
-              //                      { files.images.borrow().iter().map(create_image) }
-              //                  </div>
+                 // <button {onclick}>{"Click"}</button>
+                   // <div id="preview-area" class="flex flex-wrap relative right-72">
+                   //                      { files.images.borrow().iter().map(create_image) }
+                   //                  </div>
+        // <div id="preview-area" class="flex flex-wrap relative right-72">
+        //                             { for self.files.iter().map(Self::view_file) }
+        //                         </div>
 
+                 // <div>
+                 //   {files.}
+                 //   </div>
+                 // <div class="mx-auto max-w-5xl grid grid-cols-4 gap-8 ">
 
-            // <div>
-            //   {files.}
-            //   </div>
-            // <div class="mx-auto max-w-5xl grid grid-cols-4 gap-8 ">
+                   // <Image />
+                   // <Image />
+                   // <Image />
+                   // <Image />
+                   // <Image />
+                   // <Image />
 
-              // <Image />
-              // <Image />
-              // <Image />
-              // <Image />
-              // <Image />
-              // <Image />
+               // </div>
+                 // Local images component
 
-          // </div>
-            // Local images component
+                 <div class="block mx-auto max-w-5xl mt-16">
+                   <AcordeonCard />
+                   <AcordeonCard />
+                 </div>
 
-            <div class="block mx-auto max-w-5xl mt-16">
-              <AcordeonCard />
-              <AcordeonCard />
-            </div>
+                 <div class="fixed right-5 bottom-5">
+                 <SubmitBtn />
+                 </div>
+               </div>
+             }
+    }
+}
 
-            <div class="fixed right-5 bottom-5">
-            <SubmitBtn />
-            </div>
-          </div>
+impl Home {
+    fn view_file(file: &FileDetails) -> Html {
+        html! {
+
+                <div class="preview-media">
+                    if file.file_type.contains("image") {
+                        <Image  src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
+                    }
+                </div>
+
         }
     }
 }

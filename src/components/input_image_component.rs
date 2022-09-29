@@ -1,8 +1,8 @@
 extern crate base64;
+
 use std::collections::HashMap;
 
 use crate::components::image::Image;
-use crate::{Images, States};
 use base64::encode;
 use gloo::file::callbacks::FileReader;
 use gloo::file::File;
@@ -23,39 +23,43 @@ pub enum Msg {
 }
 
 pub struct FileInput {
-    // pub files: Vec<FileDetails>,
-    // readers: HashMap<String, FileReader>,
+    readers: HashMap<String, FileReader>,
+    files_local: Vec<FileDetails>,
 }
 
-#[derive(Clone, PartialEq, Properties)]
-pub struct ChildProps {
-    #[prop_or_default]
-    pub on_clicked: Callback<FileDetails>,
-}
+// #[derive(Clone, PartialEq, Properties)]
+// pub struct ChildProps {
+//     #[prop_or_default]
+//     pub on_clicked: Callback<FileDetails>,
+// }
 
 impl Component for FileInput {
     type Message = Msg;
-    type Properties = ChildProps;
+    type Properties = ();
+    // type Properties = ChildProps;
 
     fn create(_ctx: &Context<Self>) -> Self {
-        Self {}
+        Self {
+            readers: HashMap::default(),
+            files_local: Vec::default(),
+        }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Loaded(file_type, data) => {
-                let file_type = file_type.clone();
-                // let on_upload_files: Callback<AttrValue> =
-                ctx.props()
-                    .on_clicked
-                    .reform(move |_: Callback<FileDetails>| FileDetails {
-                        file_type: file_type.to_owned(),
-                        data: data.clone().to_owned(),
-                    });
-                // on_upload_files;
-                // let link = ctx.link().clone();
-                // self.files.push(FileDetails { data, file_type });
-                // link.send_message(Msg::Context(self.files.clone()));
+                // let file_type = file_type.clone();
+                self.files_local.push(FileDetails { data, file_type });
+                // self.readers.remove(&file_name);
+
+                // let data = data.clone();
+
+                // self.files_local.push(FileDetails { data, file_type });
+
+                // let file_details_struct = FileDetails { file_type, data };
+
+                // ctx.props().on_clicked.emit(file_details_struct);
+
                 true
             }
             Msg::Files(files) => {
@@ -80,11 +84,6 @@ impl Component for FileInput {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        // let on_upload_files: Callback<AttrValue> =
-        //     ctx.props().on_clicked.reform(move |_| FileDetails {
-        //         file_type: file_type.to_owned(),
-        //         data: data.clone().to_owned(),
-        //     });
         html! {
                        <div id="wrapper">
                            <label for="file-upload">
@@ -94,8 +93,8 @@ impl Component for FileInput {
                                    ondrop={ctx.link().callback(|event: DragEvent| {
                                        event.prevent_default();
                                        let files = event.data_transfer().unwrap().files();
-                                           log::debug!("Pula");
                                        Self::upload_files(files)
+
                                    })}
                                    ondragover={Callback::from(|event: DragEvent| {
                                        event.prevent_default();
@@ -134,9 +133,9 @@ impl Component for FileInput {
                                    Self::upload_files(input.files())
                                })}
                            />
-                          //  <div id="preview-area" class="flex flex-wrap relative right-72">
-                          //      { for self.files.iter().map(Self::view_file) }
-                          //  </div>
+                           <div id="preview-area" class="flex flex-wrap relative right-72">
+                               { for self.files_local.iter().map(Self::view_file) }
+                           </div>
                        </div>
                    }
     }
@@ -148,7 +147,8 @@ impl FileInput {
 
                 <div class="preview-media">
                     if file.file_type.contains("image") {
-                        <Image  src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
+                      <img src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
+                        // <Image  src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
                     }
                 </div>
 
