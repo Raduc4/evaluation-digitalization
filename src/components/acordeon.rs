@@ -1,9 +1,5 @@
-use web_sys::HtmlInputElement;
 use yew::functional::*;
 use yew::prelude::*;
-use yew_router::prelude::*;
-
-use crate::components::image::Image;
 
 #[function_component(AcordeonCard)]
 pub fn acordeon_card() -> Html {
