@@ -1,9 +1,4 @@
-use yew::{html, Callback, Component, Context, Html, Properties};
-
-use web_sys::HtmlInputElement;
-// use yew::functional::*;
-use yew::prelude::*;
-use yew_router::prelude::*;
+use yew::{html, Component, Context, Html};
 
 use base64::encode;
 
@@ -15,7 +10,6 @@ use crate::components::{
     input_name::Input,
     submit_btn::SubmitBtn,
 };
-use crate::Images;
 
 pub(crate) struct Home {
     files: Vec<FileDetails>,

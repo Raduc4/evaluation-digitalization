@@ -1,7 +1,5 @@
-use web_sys::HtmlInputElement;
 use yew::functional::*;
 use yew::prelude::*;
-use yew_router::prelude::*;
 
 #[function_component(Add)]
 pub fn add() -> Html {

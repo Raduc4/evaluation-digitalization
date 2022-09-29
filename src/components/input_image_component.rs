@@ -1,9 +1,6 @@
 extern crate base64;
 use std::collections::HashMap;
 
-use crate::components::image::Image;
-use crate::States;
-use base64::encode;
 use gloo::file::callbacks::FileReader;
 use gloo::file::File;
 use web_sys::{DragEvent, Event, FileList, HtmlInputElement};
@@ -24,7 +21,6 @@ pub enum Msg {
 
 pub struct FileInput {
     readers: HashMap<String, FileReader>,
-    files: Vec<FileDetails>,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -40,18 +36,12 @@ impl Component for FileInput {
     fn create(_ctx: &Context<Self>) -> Self {
         Self {
             readers: HashMap::default(),
-            files: Vec::default(),
         }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Loaded(file_name, file_type, data) => {
-                // self.files.push(FileDetails {
-                //     data,
-                //     file_type,
-                //     name: file_name.clone(),
-                // });
                 self.readers.remove(&file_name);
                 ctx.props().on_clicked.emit(FileDetails {
                     file_type: file_type.to_owned(),
@@ -133,27 +123,12 @@ impl Component for FileInput {
                                    Self::upload_files(input.files())
                                })}
                            />
-                          //  <div id="preview-area" class="flex flex-wrap relative right-72">
-                          //      { for self.files.iter().map(Self::view_file) }
-                          //  </div>
                        </div>
                    }
     }
 }
 
 impl FileInput {
-    fn view_file(file: &FileDetails) -> Html {
-        html! {
-
-                <div class="preview-media">
-                    if file.file_type.contains("image") {
-                        <Image  src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
-                    }
-                </div>
-
-        }
-    }
-
     fn upload_files(files: Option<FileList>) -> Msg {
         let mut result = Vec::new();
 
