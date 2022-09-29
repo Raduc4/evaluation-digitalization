@@ -8,17 +8,17 @@ use gloo::file::callbacks::FileReader;
 use gloo::file::File;
 use web_sys::{DragEvent, Event, FileList, HtmlInputElement};
 use yew::html::TargetCast;
-use yew::{html, use_context, Callback, Component, Context, Html};
+use yew::{html, Callback, Component, Context, Html, Properties};
 
 #[derive(Clone)]
 pub struct FileDetails {
+    pub name: String,
     pub file_type: String,
     pub data: Vec<u8>,
 }
 
 pub enum Msg {
-    Context(Vec<FileDetails>),
-    Loaded(String, Vec<u8>),
+    Loaded(String, String, Vec<u8>),
     Files(Vec<File>),
 }
 
@@ -27,9 +27,15 @@ pub struct FileInput {
     files: Vec<FileDetails>,
 }
 
+#[derive(Clone, PartialEq, Properties)]
+pub struct ChildProps {
+    #[prop_or_default]
+    pub on_clicked: Callback<FileDetails>,
+}
+
 impl Component for FileInput {
     type Message = Msg;
-    type Properties = ();
+    type Properties = ChildProps;
 
     fn create(_ctx: &Context<Self>) -> Self {
         Self {
@@ -40,23 +46,18 @@ impl Component for FileInput {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::Context(state) => {
-                let state_connection = use_context::<States>().expect("No contect found");
-                let context_state = state_connection.clone();
-                let local_state = state;
-                local_state.into_iter().for_each(|item| {
-                    context_state
-                        .temporar_images
-                        .images
-                        .borrow_mut()
-                        .push(item.data[0]);
+            Msg::Loaded(file_name, file_type, data) => {
+                // self.files.push(FileDetails {
+                //     data,
+                //     file_type,
+                //     name: file_name.clone(),
+                // });
+                self.readers.remove(&file_name);
+                ctx.props().on_clicked.emit(FileDetails {
+                    file_type: file_type.to_owned(),
+                    data: data.clone(),
+                    name: file_name.clone(),
                 });
-                true
-            }
-            Msg::Loaded(file_type, data) => {
-                let link = ctx.link().clone();
-                self.files.push(FileDetails { data, file_type });
-                link.send_message(Msg::Context(self.files.clone()));
                 true
             }
             Msg::Files(files) => {
@@ -66,9 +67,11 @@ impl Component for FileInput {
 
                     let task = {
                         let link = ctx.link().clone();
+                        let file_name = file_name.clone();
 
                         gloo::file::callbacks::read_as_bytes(&file, move |res| {
                             link.send_message(Msg::Loaded(
+                                file_name,
                                 file_type,
                                 res.expect("failed to read file"),
                             ))
@@ -130,9 +133,9 @@ impl Component for FileInput {
                                    Self::upload_files(input.files())
                                })}
                            />
-                           <div id="preview-area" class="flex flex-wrap relative right-72">
-                               { for self.files.iter().map(Self::view_file) }
-                           </div>
+                          //  <div id="preview-area" class="flex flex-wrap relative right-72">
+                          //      { for self.files.iter().map(Self::view_file) }
+                          //  </div>
                        </div>
                    }
     }

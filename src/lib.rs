@@ -13,7 +13,7 @@ use yew_router::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub type State = Rc<States>;
+// pub type State = Rc<States>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Pupil {
@@ -65,11 +65,11 @@ fn main() -> Html {
     });
 
     html! {
-      <ContextProvider<State> context={(*ctx).clone()}>
+      // <ContextProvider<State> context={(*ctx).clone()}>
         <BrowserRouter>
               <Switch<Route> render={Switch::render(switch)} />
         </BrowserRouter>
-      </ContextProvider<State>>
+      // </ContextProvider<State>>
     }
 }
 
