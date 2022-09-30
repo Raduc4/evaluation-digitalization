@@ -36,3 +36,11 @@ gloo-net = "0.2.4"
 base64 = "0.13.0"
 gloo = "0.8"
 js-sys = "0.3"
+
+[dependencies.uuid]
+version = "1.1.2"
+features = [
+    "v4",
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "js",
+]

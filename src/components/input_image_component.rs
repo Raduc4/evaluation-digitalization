@@ -3,12 +3,14 @@ use std::collections::HashMap;
 
 use gloo::file::callbacks::FileReader;
 use gloo::file::File;
+use uuid::Uuid;
 use web_sys::{DragEvent, Event, FileList, HtmlInputElement};
 use yew::html::TargetCast;
 use yew::{html, Callback, Component, Context, Html, Properties};
 
 #[derive(Clone)]
 pub struct FileDetails {
+    pub uuid: String,
     pub name: String,
     pub file_type: String,
     pub data: Vec<u8>,
@@ -26,7 +28,7 @@ pub struct FileInput {
 #[derive(Clone, PartialEq, Properties)]
 pub struct ChildProps {
     #[prop_or_default]
-    pub on_clicked: Callback<FileDetails>,
+    pub on_upload_imgs: Callback<FileDetails>,
 }
 
 impl Component for FileInput {
@@ -42,8 +44,10 @@ impl Component for FileInput {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Loaded(file_name, file_type, data) => {
+                let uuid = Uuid::new_v4().to_string();
                 self.readers.remove(&file_name);
-                ctx.props().on_clicked.emit(FileDetails {
+                ctx.props().on_upload_imgs.emit(FileDetails {
+                    uuid,
                     file_type: file_type.to_owned(),
                     data: data.clone(),
                     name: file_name.clone(),
@@ -140,6 +144,7 @@ impl FileInput {
                 .map(File::from);
             result.extend(files);
         }
+
         Msg::Files(result)
     }
 }

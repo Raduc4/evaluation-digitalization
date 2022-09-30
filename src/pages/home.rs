@@ -1,4 +1,4 @@
-use yew::{html, Component, Context, Html};
+use yew::{html, Callback, Component, Context, Html};
 
 use base64::encode;
 
@@ -17,8 +17,20 @@ pub(crate) struct Home {
 
 pub enum Msg {
     Add(FileDetails),
-    // Loaded(String, Vec<u8>),
-    // Files(Vec<File>),
+    ImageControlsEnum(ControlsStruct),
+}
+
+#[derive(Debug)]
+pub enum ImageControlsEnum {
+    Right,
+    Left,
+    Delete,
+}
+
+#[derive(Debug)]
+pub struct ControlsStruct {
+    action: ImageControlsEnum,
+    uuid: String,
 }
 
 impl Component for Home {
@@ -37,11 +49,37 @@ impl Component for Home {
                 self.files.push(file);
                 true
             }
+            Msg::ImageControlsEnum(controls_struct) => {
+                let image_to_move_idx = self
+                    .files
+                    .iter()
+                    .position(|item| item.uuid == controls_struct.uuid)
+                    .unwrap();
+
+                match controls_struct.action {
+                    ImageControlsEnum::Right => {
+                        if self.files.len() != image_to_move_idx {
+                            self.files.swap(image_to_move_idx, image_to_move_idx + 1)
+                        }
+                    }
+                    ImageControlsEnum::Left => {
+                        if image_to_move_idx != 0 {
+                            self.files.swap(image_to_move_idx, image_to_move_idx - 1)
+                        }
+                    }
+                    ImageControlsEnum::Delete => {
+                        self.files.remove(image_to_move_idx);
+                        ()
+                    }
+                }
+                true
+            }
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let on_clicked = ctx.link().callback(Msg::Add);
+        let on_upload_imgs = ctx.link().callback(Msg::Add);
+        let on_click_controls_img = ctx.link().callback(Msg::ImageControlsEnum);
         html! {
                <div class="h-screen py-10 pb-20 relative">
                  <div class="mx-auto flex justify-between items-start max-w-5xl mb-10">
@@ -49,31 +87,13 @@ impl Component for Home {
                      <Input />
                      <Add />
                    </div>
-                     <FileInput {on_clicked}/>
+                     <FileInput {on_upload_imgs}/>
                  </div>
 
-                 // <button {onclick}>{"Click"}</button>
-                   // <div id="preview-area" class="flex flex-wrap relative right-72">
-                   //                      { files.images.borrow().iter().map(create_image) }
-                   //                  </div>
+
         <div class="mx-auto max-w-5xl grid grid-cols-4 gap-8">
-                                    { for self.files.iter().map(Self::view_file) }
-                                </div>
-
-                 // <div>
-                 //   {files.}
-                 //   </div>
-                 // <div class="mx-auto max-w-5xl grid grid-cols-4 gap-8 ">
-
-                   // <Image />
-                   // <Image />
-                   // <Image />
-                   // <Image />
-                   // <Image />
-                   // <Image />
-
-               // </div>
-                 // Local images component
+         { for self.files.iter().map(|item| Self::view_file(item, on_click_controls_img.clone())) }
+        </div>
 
                  <div class="block mx-auto max-w-5xl mt-16">
                    <AcordeonCard />
@@ -89,12 +109,12 @@ impl Component for Home {
 }
 
 impl Home {
-    fn view_file(file: &FileDetails) -> Html {
+    fn view_file(file: &FileDetails, controls_callback: Callback<ControlsStruct>) -> Html {
         html! {
 
                 <div class="preview-media">
                     if file.file_type.contains("image") {
-                        <Image  src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
+                        <Image {controls_callback} src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
                     }
                 </div>
 
