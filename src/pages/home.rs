@@ -29,8 +29,8 @@ pub enum ImageControlsEnum {
 
 #[derive(Debug)]
 pub struct ControlsStruct {
-    action: ImageControlsEnum,
-    uuid: String,
+    pub action: ImageControlsEnum,
+    pub uuid: String,
 }
 
 impl Component for Home {
@@ -92,7 +92,7 @@ impl Component for Home {
 
 
         <div class="mx-auto max-w-5xl grid grid-cols-4 gap-8">
-         { for self.files.iter().map(|item| Self::view_file(item, on_click_controls_img.clone())) }
+         { for self.files.iter().map(|item| Self::view_file(item, on_click_controls_img.clone(), item.uuid.clone())) }
         </div>
 
                  <div class="block mx-auto max-w-5xl mt-16">
@@ -109,12 +109,16 @@ impl Component for Home {
 }
 
 impl Home {
-    fn view_file(file: &FileDetails, controls_callback: Callback<ControlsStruct>) -> Html {
+    fn view_file(
+        file: &FileDetails,
+        controls_callback: Callback<ControlsStruct>,
+        uuid: String,
+    ) -> Html {
         html! {
 
                 <div class="preview-media">
                     if file.file_type.contains("image") {
-                        <Image {controls_callback} src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
+                        <Image {uuid} {controls_callback} src={format!("data:{};base64,{}", file.file_type, encode(&file.data))} />
                     }
                 </div>
 
