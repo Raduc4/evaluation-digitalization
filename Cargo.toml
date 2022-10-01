@@ -35,6 +35,7 @@ serde = {version = "1.0", features=["derive"]}
 gloo-net = "0.2.4"
 base64 = "0.13.0"
 gloo = "0.8"
+yewdux = "0.8"
 js-sys = "0.3"
 
 [dependencies.uuid]

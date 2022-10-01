@@ -1,6 +1,10 @@
+use std::rc::Rc;
+
+use serde::{Deserialize, Serialize};
 use yew::{html, Callback, Component, Context, Html};
 
 use base64::encode;
+use yewdux::prelude::*;
 
 use crate::components::{
     acordeon::AcordeonCard,
@@ -11,11 +15,19 @@ use crate::components::{
     submit_btn::SubmitBtn,
 };
 
-pub(crate) struct Home {
-    files: Vec<FileDetails>,
+#[derive(Default, Clone, PartialEq, Eq, Deserialize, Serialize, Store)]
+#[store(storage = "session", storage_tab_sync)]
+pub struct State {
+    pub files: Vec<FileDetails>,
+}
+
+pub struct Home {
+    pub state: Rc<State>,
+    pub dispatch: Dispatch<State>,
 }
 
 pub enum Msg {
+    State(Rc<State>),
     Add(FileDetails),
     ImageControlsEnum(ControlsStruct),
 }
@@ -37,20 +49,27 @@ impl Component for Home {
     type Message = Msg;
     type Properties = ();
 
-    fn create(_ctx: &Context<Self>) -> Self {
+    fn create(ctx: &Context<Self>) -> Self {
+        let dispatch = Dispatch::<State>::subscribe(ctx.link().callback(Msg::State));
         Self {
-            files: Vec::default(),
+            state: dispatch.get(),
+            dispatch,
         }
     }
 
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
+            Msg::State(state) => {
+                self.state = state;
+                true
+            }
             Msg::Add(file) => {
-                self.files.push(file);
+                self.dispatch.reduce_mut(|state| state.files.push(file));
                 true
             }
             Msg::ImageControlsEnum(controls_struct) => {
                 let image_to_move_idx = self
+                    .state
                     .files
                     .iter()
                     .position(|item| item.uuid == controls_struct.uuid)
@@ -58,17 +77,22 @@ impl Component for Home {
 
                 match controls_struct.action {
                     ImageControlsEnum::Right => {
-                        if self.files.len() != image_to_move_idx {
-                            self.files.swap(image_to_move_idx, image_to_move_idx + 1)
+                        if self.state.files.len() != image_to_move_idx {
+                            self.dispatch.reduce_mut(|state| {
+                                state.files.swap(image_to_move_idx, image_to_move_idx + 1)
+                            })
                         }
                     }
                     ImageControlsEnum::Left => {
                         if image_to_move_idx != 0 {
-                            self.files.swap(image_to_move_idx, image_to_move_idx - 1)
+                            self.dispatch.reduce_mut(|state| {
+                                state.files.swap(image_to_move_idx, image_to_move_idx - 1)
+                            })
                         }
                     }
                     ImageControlsEnum::Delete => {
-                        self.files.remove(image_to_move_idx);
+                        self.dispatch
+                            .reduce_mut(|state| state.files.remove(image_to_move_idx));
                         ()
                     }
                 }
@@ -78,7 +102,9 @@ impl Component for Home {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let on_upload_imgs = ctx.link().callback(Msg::Add);
+        let state_local = self.state.files.clone();
+        // let (files, dispatch) = use_store::<ImagesPersistentState>();
+        let on_upload_imgs = ctx.link().callback(|item| Msg::Add(item));
         let on_click_controls_img = ctx.link().callback(Msg::ImageControlsEnum);
         html! {
                <div class="h-screen py-10 pb-20 relative">
@@ -92,7 +118,7 @@ impl Component for Home {
 
 
         <div class="mx-auto max-w-5xl grid grid-cols-4 gap-8">
-         { for self.files.iter().map(|item| Self::view_file(item, on_click_controls_img.clone(), item.uuid.clone())) }
+         { for state_local.iter().map(|item| Self::view_file(item, on_click_controls_img.clone(), item.uuid.clone())) }
         </div>
 
                  <div class="block mx-auto max-w-5xl mt-16">
