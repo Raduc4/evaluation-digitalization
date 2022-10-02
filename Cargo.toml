@@ -37,6 +37,7 @@ base64 = "0.13.0"
 gloo = "0.8"
 yewdux = "0.8"
 js-sys = "0.3"
+rexie = "0.4.2"
 
 [dependencies.uuid]
 version = "1.1.2"
