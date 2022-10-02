@@ -2,7 +2,8 @@
 
 mod components;
 mod pages;
-
+mod services;
+mod state;
 use pages::home::Home;
 
 use wasm_bindgen::prelude::*;

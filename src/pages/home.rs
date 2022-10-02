@@ -1,29 +1,27 @@
-use std::rc::Rc;
-
-use serde::{Deserialize, Serialize};
-use yew::{html, Callback, Component, Context, Html};
-
+use crate::components::{
+    acordeon::AcordeonCard, add_btn::Add, image::Image, input_image_component::FileInput,
+    input_name::Input, submit_btn::SubmitBtn,
+};
+use crate::services::{indexdb::example, rexie::build_database};
+use crate::state::state::FileDetails;
+use crate::state::state::PupilDetails;
+use crate::state::state::State;
 use base64::encode;
+use gloo::console::log;
+use rexie::*;
+use std::rc::Rc;
+use wasm_bindgen::prelude::wasm_bindgen;
+use yew::{html, Callback, Component, Context, Html};
 use yewdux::prelude::*;
 
-use crate::components::{
-    acordeon::AcordeonCard,
-    add_btn::Add,
-    image::Image,
-    input_image_component::{FileDetails, FileInput},
-    input_name::Input,
-    submit_btn::SubmitBtn,
-};
-
-#[derive(Default, Clone, PartialEq, Eq, Deserialize, Serialize, Store)]
-#[store(storage = "session", storage_tab_sync)]
-pub struct State {
-    pub files: Vec<FileDetails>,
+#[wasm_bindgen(module = "/src/pages/addPupil.js")]
+extern "C" {
+    fn addPupil(id: i32, name: String, photos_bytes_array: Vec<u8>);
 }
-
 pub struct Home {
     pub state: Rc<State>,
     pub dispatch: Dispatch<State>,
+    pub rexie: Option<Rexie>,
 }
 
 pub enum Msg {
@@ -54,12 +52,15 @@ impl Component for Home {
         Self {
             state: dispatch.get(),
             dispatch,
+            rexie: None,
         }
     }
 
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::State(state) => {
+                // let rexie = wasm_bindgen_futures::spawn_local(example().await.unwrap());
+
                 self.state = state;
                 true
             }
@@ -102,14 +103,17 @@ impl Component for Home {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let pup = PupilDetails::new(31, "Name".to_string(), vec![12, 13]);
+        // refreshform("body");
+        addPupil(pup.id, pup.name, pup.photos);
         let state_local = self.state.files.clone();
         // let (files, dispatch) = use_store::<ImagesPersistentState>();
         let on_upload_imgs = ctx.link().callback(|item| Msg::Add(item));
         let on_click_controls_img = ctx.link().callback(Msg::ImageControlsEnum);
         html! {
-               <div class="h-screen py-10 pb-20 relative">
-                 <div class="mx-auto flex justify-between items-start max-w-5xl mb-10">
-                   <div class="flex flex-col justify-between items-start">
+          <div class="h-screen py-10 pb-20 relative">
+          <div class="mx-auto flex justify-between items-start max-w-5xl mb-10">
+          <div class="flex flex-col justify-between items-start">
                      <Input />
                      <Add />
                    </div>

@@ -3,19 +3,12 @@ use std::collections::HashMap;
 
 use gloo::file::callbacks::FileReader;
 use gloo::file::File;
-use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use web_sys::{DragEvent, Event, FileList, HtmlInputElement};
 use yew::html::TargetCast;
 use yew::{html, Callback, Component, Context, Html, Properties};
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct FileDetails {
-    pub uuid: String,
-    pub name: String,
-    pub file_type: String,
-    pub data: Vec<u8>,
-}
+use crate::state::state::FileDetails;
 
 pub enum Msg {
     Loaded(String, String, Vec<u8>),
